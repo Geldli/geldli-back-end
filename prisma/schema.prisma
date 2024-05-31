@@ -33,6 +33,7 @@ model Despesa{
   data  DateTime @db.Date
   valor Float
   nome String
+  descricao String
 
   categoria CategoriaDespesa @relation(fields: [idCategoria], references: [id])
   idCategoria String
@@ -46,8 +47,9 @@ model DespesaContinua{
   data  DateTime @db.Date
   valor Float
   nome String
+  descricao String
   mesComeco Int
-  diaPagament Int
+  diaPagamento Int
   anualmente Boolean
 
   categoria CategoriaDespesa @relation(fields: [idCategoria], references: [id])
@@ -73,9 +75,10 @@ model Ativo{
   data  DateTime
   valor Float
   nome String
+  descricao String
 
   categoria CategoriaAtivo @relation(fields: [idCategoria], references: [id])
-  idCategoria String 
+  idCategoria String
 
   usuario Usuario @relation(fields: [idUsuario], references: [id])
   idUsuario Int
@@ -86,8 +89,9 @@ model AtivoContinuo{
   data  DateTime @db.Date
   valor Float
   nome String
+  descricao String
   mesComeco Int
-  diaPagament Int
+  diaPagamento Int
   anualmente Boolean
 
   categoria CategoriaAtivo @relation(fields: [idCategoria], references: [id])
