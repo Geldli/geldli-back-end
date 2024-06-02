@@ -30,7 +30,7 @@ let usuarios: Array<Usuario> = [];
 
 
 /* Post Methods */
-app.post("/cadastrar", async (req, res)=>{
+app.post("/usuario/cadastrar", async (req, res)=>{
   const data = req.body;
   const post = await prisma.usuario.create({
     data:{
@@ -47,8 +47,8 @@ app.post("/categoriaDespesa", async(req, res)=>{
   const data = req.body;
   const post = await prisma.categoriaDespesa.create({
     data: {
-      id: data.nome,
-      cores: data.cores,
+      id:  data.nome.toLowerCase(),
+      cores: data.cores.toLowerCase(),
       idUsuario: data.idUsuario,
     }
   })
@@ -61,8 +61,8 @@ app.post("/categoriaAtivo", async(req, res)=>{
 
   const post = await prisma.categoriaAtivo.create({
     data: {
-      id: data.nome,
-      cores: data.cores,
+      id: data.nome.toLowerCase(),
+      cores: data.cores.toLowerCase(),
       idUsuario: parseInt(data.idUsuario),
     }
   })
@@ -153,7 +153,7 @@ app.get("/despesas", async (req, res)=>{
   res.json(get);
 })
 
-app.get("/despesaContinuas", async (req, res) =>{
+app.get("/despesasContinuas", async (req, res) =>{
   const get = await prisma.despesaContinua.findMany();
   res.json(get);
 })
@@ -269,7 +269,7 @@ app.get("/categoriasAtivos/usuario/:id", async (req, res)=>{
 })
 
 // encontra a despesa  contínua  com id X
-app.get("/despesas/:id", async(req, res)=>{
+app.get("/despesasContinuas/:id", async(req, res)=>{
   const get = await prisma.despesaContinua.findUnique({
     where: {
       id: parseInt(req.params.id)
@@ -293,7 +293,7 @@ app.get("/despesasContinuas/usuario/:id", async (req, res)=>{
 // encontra todas as despesas contínuas do usuário X com a categoria Y
 
 app.get("/despesasContinuas/usuario/:id/:categoria", async (req, res)=>{
-  const get = prisma.despesaContinua.findMany({
+  const get = await prisma.despesaContinua.findMany({
     where: {
       idUsuario: parseInt(req.params.id),
       idCategoria: req.params.categoria
@@ -303,8 +303,234 @@ app.get("/despesasContinuas/usuario/:id/:categoria", async (req, res)=>{
   res.json(get);
 })
 
+// encontra os ativos contínuos  com id X
+app.get("/ativosContinuos/:id", async(req, res)=>{
+  const get = await prisma.ativoContinuo.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+
+  res.json();
+})
+
+// encontra todos os ativos contínuos do usuário  X
+app.get("/ativosContinuos/usuario/:id", async (req, res)=>{
+  const get = await prisma.ativoContinuo.findMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  res.json(get);
+})
+
+// encontra todas os ativos contínuos do usuário X com a categoria Y
+
+app.get("/ativosContinuos/usuario/:id/:categoria", async (req, res)=>{
+  const get = await prisma.ativoContinuo.findMany({
+    where: {
+      idUsuario: parseInt(req.params.id),
+      idCategoria: req.params.categoria
+    }
+  })
+  console.log(req.params.categoria)
+  res.json(get);
+})
+
+/* Update Methods */
+
+app.put("/usuario/update/", async(req, res)=>{
+  const data = req.body;
+  const put = await prisma.usuario.update({
+    where:{
+      id: data.id,
+    },
+    data: {
+      senha: data.senha
+    }
+  })
+})
+
+app.put("/despesa/update", async (req, res)=>{
+  const data = req.body;
+  const put = await prisma.despesa.update({
+    where:{
+      id: data.id
+    },
+    data:{
+      valor: data.valor,
+      nome: data.nome,
+      descricao: data.descricao,
+      idCategoria: data.idCategoria,
+    }
+  })
+  res.json(put);
+})
+
+app.put("/ativo/update", async (req, res)=>{
+  const data = req.body;
+  const put = await prisma.ativo.update({
+    where:{
+      id: data.id
+    },
+    data:{
+      valor: data.valor,
+      nome: data.nome,
+      descricao: data.descricao,
+      idCategoria: data.idCategoria,
+    }
+  })
+  res.json(put);
+})
+
+
+app.put("/despesaContinua/update", async (req, res)=>{
+  const data = req.body;
+  const put = await prisma.despesaContinua.update({
+    where:{
+      id: data.id
+    },
+    data:{
+      valor: data.valor,
+      nome: data.nome,
+      descricao: data.descricao,
+      mesComeco: data.mesComeco,
+      diaPagamento: data.diaPagamento,
+      anualmente: data.anualmente,
+    }
+  })
+  res.json(put);
+})
+
+app.put("/ativoContinuo/update", async (req, res)=>{
+  const data = req.body;
+  const put = await prisma.ativoContinuo.update({
+    where:{
+      id: data.id
+    },
+    data:{
+      valor: data.valor,
+      nome: data.nome,
+      descricao: data.descricao,
+      mesComeco: data.mesComeco,
+      diaPagamento: data.diaPagamento,
+      anualmente: data.anualmente,
+    }
+  })
+  res.json(put);
+})
+
+/* Delete Methods */
+
+// Apaga um usuário e tudo o que contém dele no sistema (não altere a ordem das funções - perceba que as primeira não dependem das outras para serem apagadas)
+app.delete("/usuario/excluir/:id", async (req, res)=>{
+  await prisma.ativo.deleteMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  await prisma.despesa.deleteMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  await prisma.despesaContinua.deleteMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  await prisma.ativoContinuo.deleteMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  await prisma.categoriaAtivo.deleteMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  await prisma.categoriaDespesa.deleteMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  const del = await prisma.usuario.delete({
+    where:{
+      id: parseInt(req.params.id)
+    }
+  })
+
+  res.json(del);
+})
+
+app.delete("/despesa/excluir/:id", async (req, res)=>{
+  const del = await prisma.despesa.delete({
+    where:{
+      id: parseInt(req.params.id)
+    }
+  })
+
+  res.json(del);
+})
+
+app.delete("/ativo/excluir/:id", async (req, res)=>{
+  const del = await prisma.ativo.delete({
+    where:{
+      id: parseInt(req.params.id)
+    }
+  })
+
+  res.json(del);
+})
+
+app.delete("/ativoContinuo/excluir/:id", async (req, res)=>{
+  const del = await prisma.ativoContinuo.delete({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+  res.json(del);
+})
+
+app.delete("/despesaContinua/excluir/:id", async (req, res)=>{
+  const del = await prisma.despesaContinua.delete({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+
+  res.json(del);
+})
+
+app.delete("/categoriaDespesa/excluir/:id", async (req, res)=>{
+  const del = await prisma.categoriaDespesa.delete({
+    where:{
+      id: req.params.id
+    }
+  })
+
+  res.json(del);
+})
+
+app.delete("/categoriaAtivo/excluir/:id", async (req, res)=>{
+  const del = await prisma.categoriaAtivo.delete({
+    where:{
+      id: req.params.id
+    }
+  })
+
+  res.json(del);
+})
+
 
 /* Inicia o servidor do Express */
 const server = app.listen(port, ()=>{
-  console.log(`listening in port ${port}`)
+  console.log(`listening in localhost:${port}`)
 })
