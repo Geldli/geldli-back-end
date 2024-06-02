@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 async function main() {
   app.use('/', ClientRouter);
 
-  app.use(express.json()) // faz com que as requests tenham formato JSON
+  app.use(express.json()) 
 
   /* para fins de teste */
   class Usuario{
