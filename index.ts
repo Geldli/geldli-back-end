@@ -142,6 +142,7 @@ app.post("/despesaContinua", async (req, res)=>{
 
 /* Get Methods */
 
+// Métodos Gerais
 app.get("/usuarios", async (req, res) =>{
   const get = await prisma.usuario.findMany();
   res.json(get);
@@ -176,6 +177,132 @@ app.get("/categoriasAtivos", async (req, res) =>{
   const get = await prisma.categoriaAtivo.findMany();
   res.json(get);
 })
+
+// Métodos específicos
+
+// encontra a despesa por ID da despesa
+app.get("/despesas/:id", async (req, res)=>{
+  const get = await prisma.despesa.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+
+  res.json(get);
+})
+
+// encontra todas as despesas do usuario X
+app.get("/despesas/usuario/:id", async (req, res) =>{
+  const get = await prisma.despesa.findMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  res.json(get);
+})
+
+// encontra todas as despesas do usuario X e com categoria Y
+app.get("/despesas/usuario/:idUsuario/:categoria", async (req, res)=>{
+  const get = await prisma.despesa.findMany({
+    where: {
+      idUsuario: parseInt(req.params.idUsuario),
+      idCategoria: req.params.categoria
+    }
+  })
+  res.json(get);
+})
+
+// econtra o ativo com id X
+app.get("/ativos/:id", async(req, res)=>{
+  const get  = await prisma.ativo.findUnique({
+    where:{
+      id: parseInt(req.params.id)
+    }
+  })
+
+  res.json(get);
+})
+
+//encontra os ativos do usuario X
+app.get("/ativos/usuario/:id", async (req, res) =>{
+  const get = await prisma.ativo.findMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  res.json(get);
+})
+
+// encontra os ativos do usuario X com categoria Y
+app.get("/ativos/usuario/:idUsuario/:categoria", async (req, res)=>{
+  const get = await prisma.ativo.findMany({
+    where: {
+      idUsuario: parseInt(req.params.idUsuario),
+      idCategoria: req.params.categoria
+    }
+  })
+  res.json(get);
+})
+
+// encontra todas as categorias de despesa do usuario X
+app.get("/categoriasDespesas/usuario/:id", async (req, res)=>{
+  const get = await prisma.categoriaDespesa.findMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  res.json(get);
+})
+
+// encontra todas as categorias de ativos do usuario X
+app.get("/categoriasAtivos/usuario/:id", async (req, res)=>{
+  const get = await prisma.categoriaAtivo.findMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  res.json(get);
+})
+
+// encontra a despesa  contínua  com id X
+app.get("/despesas/:id", async(req, res)=>{
+  const get = await prisma.despesaContinua.findUnique({
+    where: {
+      id: parseInt(req.params.id)
+    }
+  })
+
+  res.json();
+})
+
+// encontra todas as despesas contínuas do usuário  X
+app.get("/despesasContinuas/usuario/:id", async (req, res)=>{
+  const get = await prisma.despesaContinua.findMany({
+    where:{
+      idUsuario: parseInt(req.params.id)
+    }
+  })
+
+  res.json(get);
+})
+
+// encontra todas as despesas contínuas do usuário X com a categoria Y
+
+app.get("/despesasContinuas/usuario/:id/:categoria", async (req, res)=>{
+  const get = prisma.despesaContinua.findMany({
+    where: {
+      idUsuario: parseInt(req.params.id),
+      idCategoria: req.params.categoria
+    }
+  })
+
+  res.json(get);
+})
+
 
 /* Inicia o servidor do Express */
 const server = app.listen(port, ()=>{
