@@ -3,20 +3,25 @@
   "version": "0.0.1",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node-dev --respawn --transpile-only --exit-child src/server.ts",
+    "db:migrate": "npx prisma migrate dev --name user-entity --create-only && npx prisma generate",
+    "db:push": "npx prisma db push"
   },
   "keywords": [],
-  "author": "",
+  "author": "Geldli",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/node": "^20.12.13",
-    "express": "^4.19.2",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.13.0",
     "prisma": "^5.14.0",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@prisma/client": "^5.14.0"
+    "@prisma/client": "^5.14.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
   }
 }
