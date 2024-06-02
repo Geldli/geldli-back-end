@@ -10,7 +10,7 @@ router.use(express.static(path.join(__dirname, '../../client/dist')));
 
 
 router.get(['', '/despesas', '/ativos', '/perfil'], (req: Request, res: Response) => {
-  res.sendFile('../../client/dist/index.html');
+  res.sendFile(path.join(__dirname, '../../client/dist/index.html') );
 })
 
 export default router;

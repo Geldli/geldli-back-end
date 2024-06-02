@@ -1,8 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { create } from 'domain';
-import { json, text } from 'stream/consumers';
 import express, {Express, Request, Response} from "express";
-import e from 'express';
 
 const prisma = new PrismaClient();
 const app = express();
