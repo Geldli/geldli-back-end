@@ -1,19 +1,19 @@
 import express from "express";
-import ContinuousActiveController from "../controllers/continuousActive.controller";
+import ContinuousAssetController from "../controllers/continuousAsset.controller";
 const router = express.Router();
 
-router.post("/create", ContinuousActiveController.createContinuousActive);
-router.post("/getAll", ContinuousActiveController.getAllContinuousActive);
-router.post("/getById/:id", ContinuousActiveController.getContinousActiveById);
+router.post("/create", ContinuousAssetController.createContinuousAsset);
+router.post("/getAll", ContinuousAssetController.getAllContinuousAsset);
+router.post("/getById/:id", ContinuousAssetController.getContinousAssetById);
 router.post(
   "/getByUserId/:id",
-  ContinuousActiveController.getContinuousActiveByUserId
+  ContinuousAssetController.getContinuousAssetByUserId
 );
 router.post(
   "/getByUserAndCategory/:id/:categoria",
-  ContinuousActiveController.getContinuousActiveByUserAndCategory
+  ContinuousAssetController.getContinuousAssetByUserAndCategory
 );
-router.post("/update", ContinuousActiveController.updateContinuousActive);
-router.post("/delete/:id", ContinuousActiveController.deleteContinuousActive);
+router.post("/update", ContinuousAssetController.updateContinuousAsset);
+router.post("/delete/:id", ContinuousAssetController.deleteContinuousAsset);
 
 export default router;

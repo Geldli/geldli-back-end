@@ -8,16 +8,15 @@ const createContinuousExpense = async (req: Request, res: Response) => {
       data: {
         data: new Date(),
         valor: data.valor,
-        nome: data.nome,
-        descricao: data.descricao,
-        mesComeco: data.mesComeco,
-        diaPagamento: data.diaPagamento,
-        anualmente: data.anualmente,
-        idCategoria: data.idCategoria,
-        idUsuario: data.idUsuario,
+        nome: data.name,
+        descricao: data.description,
+        mesComeco: data.startMonth,
+        diaPagamento: data.paymentDay,
+        anualmente: data.annually,
+        idCategoria: data.idCategory,
+        idUsuario: data.idUser,
       },
     });
-
     res.status(200).json(post);
   } catch (e) {
     res.status(500).json({ Error: e });
@@ -88,11 +87,11 @@ const updateContinuousExpense = async (req: Request, res: Response) => {
       },
       data: {
         valor: data.valor,
-        nome: data.nome,
-        descricao: data.descricao,
-        mesComeco: data.mesComeco,
-        diaPagamento: data.diaPagamento,
-        anualmente: data.anualmente,
+        nome: data.name,
+        descricao: data.description,
+        mesComeco: data.startMonth,
+        diaPagamento: data.paymentDay,
+        anualmente: data.annually,
       },
     });
     res.status(200).json(put);

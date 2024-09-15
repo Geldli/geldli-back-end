@@ -8,8 +8,8 @@ import ActiveCategoryRouter from "./routes/activeCategory.route";
 import ContinuousActiveRouter from "./routes/continuousActive.route";
 import ContinuousExpenseRouter from "./routes/continuousExpense.route";
 import dotenv from "dotenv";
-
 import ClientRouter from "./routes/client.route";
+const cors = require("cors");
 
 dotenv.config();
 
@@ -17,9 +17,14 @@ export const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+/* CORS - https://expressjs.com/en/resources/middleware/cors.html#installation
+  Saporra não deixa eu usar o back com o front ao mesmo tempo. Pra usar, temos que importar a biblioteca dele
+  que está acima, e assim ele deixa eu usar de boa. Mas na hora que upar pro server oficial, temos de tirar ele.
+*/
+app.use(cors());
+
 async function main() {
   app.use("/", ClientRouter);
-
   app.use(express.json());
 
   app.use("/api/v1/user", UserRouter);

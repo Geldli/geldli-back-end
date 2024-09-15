@@ -1,17 +1,17 @@
 import express from "express";
-import ActiveController from "../controllers/active.controller";
+import AssetController from "../controllers/asset.controller";
 
 const router = express.Router();
 
-router.post("/create", ActiveController.createActive);
-router.get("/getAll", ActiveController.getAllActives);
-router.get("/getById/:id", ActiveController.getActiveById);
-router.get("/getByUserId/:id", ActiveController.getActiveByUserId);
+router.post("/create", AssetController.createAsset);
+router.get("/getAll", AssetController.getAllAssets);
+router.get("/getById/:id", AssetController.getAssetById);
+router.get("/getByUserId/:id", AssetController.getAssetByUserId);
 router.get(
   "/getByUserAndCategory/:id/:categoria",
-  ActiveController.getActiveByUserCategory
+  AssetController.getAssetByUserCategory
 );
-router.put("/update", ActiveController.updateActive);
-router.delete("/delete/:id", ActiveController.deleteActive);
+router.put("/update", AssetController.updateAsset);
+router.delete("/delete/:id", AssetController.deleteAsset);
 
 export default router;

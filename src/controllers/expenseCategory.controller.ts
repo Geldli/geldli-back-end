@@ -8,9 +8,9 @@ const createExpenseCategory = async (req: Request, res: Response) => {
     const data = req.body;
     const post = await prisma.categoriaDespesa.create({
       data: {
-        id: data.nome.toLowerCase(),
-        cores: data.cores.toLowerCase(),
-        idUsuario: data.idUsuario,
+        id: data.name.toLowerCase(),
+        cores: data.color.toLowerCase(),
+        idUsuario: data.idUser,
       },
     });
 

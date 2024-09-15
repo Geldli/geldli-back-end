@@ -1,14 +1,11 @@
 import express from "express";
-import ActiveCategoryController from "../controllers/activeCategory.controller";
+import AssetCategoryController from "../controllers/assetCategory.controller";
 
 const router = express.Router();
 
-router.post("/create", ActiveCategoryController.createActiveCategory);
-router.get("/getAll", ActiveCategoryController.getAllActiveCategory);
-router.get(
-  "/getByUserId/:id",
-  ActiveCategoryController.getActiveCategoryByUser
-);
-router.delete("/delete/:id", ActiveCategoryController.deleteActiveCategory);
+router.post("/create", AssetCategoryController.createAssetCategory);
+router.get("/getAll", AssetCategoryController.getAllAssetCategory);
+router.get("/getByUserId/:id", AssetCategoryController.getAssetCategoryByUser);
+router.delete("/delete/:id", AssetCategoryController.deleteAssetCategory);
 
 export default router;

@@ -1,20 +1,20 @@
 import { prisma } from "../server";
 import express, { Express, Request, Response } from "express";
 
-const createContinuousActive = async (req: Request, res: Response) => {
+const createContinuousAsset = async (req: Request, res: Response) => {
   try {
     const data = req.body;
     const post = await prisma.ativoContinuo.create({
       data: {
         data: new Date(),
         valor: data.valor,
-        nome: data.nome,
-        descricao: data.descricao,
-        mesComeco: data.mesComeco,
-        diaPagamento: data.diaPagamento,
-        anualmente: data.anualmente,
-        idCategoria: data.idCategoria,
-        idUsuario: data.idUsuario,
+        nome: data.name,
+        descricao: data.description,
+        mesComeco: data.startMonth,
+        diaPagamento: data.paymentDay,
+        anualmente: data.annually,
+        idCategoria: data.idCategory,
+        idUsuario: data.idUser,
       },
     });
 
@@ -24,7 +24,7 @@ const createContinuousActive = async (req: Request, res: Response) => {
   }
 };
 
-const getAllContinuousActive = async (req: Request, res: Response) => {
+const getAllContinuousAsset = async (req: Request, res: Response) => {
   try {
     const get = await prisma.ativoContinuo.findMany();
     res.status(200).json(get);
@@ -34,7 +34,7 @@ const getAllContinuousActive = async (req: Request, res: Response) => {
 };
 
 // encontra os ativos contínuos  com id X
-const getContinousActiveById = async (req: Request, res: Response) => {
+const getContinousAssetById = async (req: Request, res: Response) => {
   try {
     const get = await prisma.ativoContinuo.findUnique({
       where: {
@@ -49,7 +49,7 @@ const getContinousActiveById = async (req: Request, res: Response) => {
 };
 
 // encontra todos os ativos contínuos do usuário  X
-const getContinuousActiveByUserId = async (req: Request, res: Response) => {
+const getContinuousAssetByUserId = async (req: Request, res: Response) => {
   try {
     const get = await prisma.ativoContinuo.findMany({
       where: {
@@ -65,7 +65,7 @@ const getContinuousActiveByUserId = async (req: Request, res: Response) => {
 
 // encontra todas os ativos contínuos do usuário X com a categoria Y
 
-const getContinuousActiveByUserAndCategory = async (
+const getContinuousAssetByUserAndCategory = async (
   req: Request,
   res: Response
 ) => {
@@ -73,17 +73,17 @@ const getContinuousActiveByUserAndCategory = async (
     const get = await prisma.ativoContinuo.findMany({
       where: {
         idUsuario: parseInt(req.params.id),
-        idCategoria: req.params.categoria,
+        idCategoria: req.params.category,
       },
     });
-    console.log(req.params.categoria);
+    console.log(req.params.category);
     res.status(200).json(get);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
 };
 
-const updateContinuousActive = async (req: Request, res: Response) => {
+const updateContinuousAsset = async (req: Request, res: Response) => {
   try {
     const data = req.body;
     const put = await prisma.ativoContinuo.update({
@@ -92,11 +92,11 @@ const updateContinuousActive = async (req: Request, res: Response) => {
       },
       data: {
         valor: data.valor,
-        nome: data.nome,
-        descricao: data.descricao,
-        mesComeco: data.mesComeco,
-        diaPagamento: data.diaPagamento,
-        anualmente: data.anualmente,
+        nome: data.name,
+        descricao: data.description,
+        mesComeco: data.startMonth,
+        diaPagamento: data.paymentDay,
+        anualmente: data.annually,
       },
     });
     res.status(200).json(put);
@@ -105,7 +105,7 @@ const updateContinuousActive = async (req: Request, res: Response) => {
   }
 };
 
-const deleteContinuousActive = async (req: Request, res: Response) => {
+const deleteContinuousAsset = async (req: Request, res: Response) => {
   try {
     const del = await prisma.ativoContinuo.delete({
       where: {
@@ -119,11 +119,11 @@ const deleteContinuousActive = async (req: Request, res: Response) => {
 };
 
 export default {
-  createContinuousActive,
-  getAllContinuousActive,
-  getContinousActiveById,
-  getContinuousActiveByUserAndCategory,
-  getContinuousActiveByUserId,
-  updateContinuousActive,
-  deleteContinuousActive,
+  createContinuousAsset,
+  getAllContinuousAsset,
+  getContinousAssetById,
+  getContinuousAssetByUserAndCategory,
+  getContinuousAssetByUserId,
+  updateContinuousAsset,
+  deleteContinuousAsset,
 };

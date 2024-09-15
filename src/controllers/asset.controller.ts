@@ -3,17 +3,17 @@ import express, { Express, Request, Response } from "express";
 
 // res.status(500).json({ Error: e });
 
-const createActive = async (req: Request, res: Response) => {
+const createAsset = async (req: Request, res: Response) => {
   try {
     const data = req.body;
     const post = await prisma.ativo.create({
       data: {
         data: new Date(),
         valor: data.valor,
-        nome: data.nome,
-        descricao: data.descricao,
-        idCategoria: data.idCategoria,
-        idUsuario: data.idUsuario,
+        nome: data.name,
+        descricao: data.description,
+        idCategoria: data.idCategory,
+        idUsuario: data.idUser,
       },
     });
 
@@ -23,7 +23,7 @@ const createActive = async (req: Request, res: Response) => {
   }
 };
 
-const getAllActives = async (req: Request, res: Response) => {
+const getAllAssets = async (req: Request, res: Response) => {
   try {
     const get = await prisma.ativo.findMany();
     res.status(200).json(get);
@@ -33,7 +33,7 @@ const getAllActives = async (req: Request, res: Response) => {
 };
 
 // econtra o ativo com id X
-const getActiveById = async (req: Request, res: Response) => {
+const getAssetById = async (req: Request, res: Response) => {
   try {
     const get = await prisma.ativo.findUnique({
       where: {
@@ -48,7 +48,7 @@ const getActiveById = async (req: Request, res: Response) => {
 };
 
 //encontra os ativos do usuario X
-const getActiveByUserId = async (req: Request, res: Response) => {
+const getAssetByUserId = async (req: Request, res: Response) => {
   try {
     const get = await prisma.ativo.findMany({
       where: {
@@ -63,12 +63,12 @@ const getActiveByUserId = async (req: Request, res: Response) => {
 };
 
 // encontra os ativos do usuario X com categoria Y
-const getActiveByUserCategory = async (req: Request, res: Response) => {
+const getAssetByUserCategory = async (req: Request, res: Response) => {
   try {
     const get = await prisma.ativo.findMany({
       where: {
-        idUsuario: parseInt(req.params.idUsuario),
-        idCategoria: req.params.categoria,
+        idUsuario: parseInt(req.params.idUser),
+        idCategoria: req.params.category,
       },
     });
     res.json(get);
@@ -77,7 +77,7 @@ const getActiveByUserCategory = async (req: Request, res: Response) => {
   }
 };
 
-const updateActive = async (req: Request, res: Response) => {
+const updateAsset = async (req: Request, res: Response) => {
   try {
     const data = req.body;
     const put = await prisma.ativo.update({
@@ -86,9 +86,9 @@ const updateActive = async (req: Request, res: Response) => {
       },
       data: {
         valor: data.valor,
-        nome: data.nome,
-        descricao: data.descricao,
-        idCategoria: data.idCategoria,
+        nome: data.name,
+        descricao: data.description,
+        idCategoria: data.idCategory,
       },
     });
     res.status(200).json(put);
@@ -97,7 +97,7 @@ const updateActive = async (req: Request, res: Response) => {
   }
 };
 
-const deleteActive = async (req: Request, res: Response) => {
+const deleteAsset = async (req: Request, res: Response) => {
   try {
     const del = await prisma.ativo.delete({
       where: {
@@ -112,11 +112,11 @@ const deleteActive = async (req: Request, res: Response) => {
 };
 
 export default {
-  createActive,
-  getActiveById,
-  getActiveByUserCategory,
-  getActiveByUserId,
-  getAllActives,
-  updateActive,
-  deleteActive,
+  createAsset,
+  getAssetById,
+  getAssetByUserCategory,
+  getAssetByUserId,
+  getAllAssets,
+  updateAsset,
+  deleteAsset,
 };
