@@ -8,7 +8,7 @@ router.get("/getAll", ExpenseController.getAllExpenses);
 router.get("/getById/:id", ExpenseController.getExpenseByID);
 router.get("/getByUserId/:id", ExpenseController.getExpensesByUserID);
 router.get(
-  "/getByUserAndCategory/:id/:categoria",
+  "/getByUserAndCategory/:idUser/:category",
   ExpenseController.getExpensesByUserCategory
 );
 router.put("/update", ExpenseController.updateExpense);

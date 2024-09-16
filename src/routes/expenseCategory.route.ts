@@ -9,6 +9,9 @@ router.get(
   "/getByUserId/:id",
   ExpenseCategoryController.getExpenseCategoryByUser
 );
-router.delete("/delete/:id", ExpenseCategoryController.deleteExpenseCategory);
+router.delete(
+  "/delete/:idUser/:category",
+  ExpenseCategoryController.deleteExpenseCategory
+);
 
 export default router;

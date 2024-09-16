@@ -49,7 +49,8 @@ const deleteAssetCategory = async (req: Request, res: Response) => {
   try {
     const del = await prisma.categoriaAtivo.delete({
       where: {
-        id: req.params.id,
+        idUsuario: parseInt(req.params.idUser),
+        id: req.params.category,
       },
     });
 

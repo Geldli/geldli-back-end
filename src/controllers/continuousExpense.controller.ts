@@ -40,7 +40,7 @@ const getContinuousExpenseById = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(200).json();
+    res.status(200).json(get);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
@@ -68,7 +68,7 @@ const getContinuousExpenseByUserAndCategory = async (
     const get = await prisma.despesaContinua.findMany({
       where: {
         idUsuario: parseInt(req.params.id),
-        idCategoria: req.params.categoria,
+        idCategoria: req.params.category,
       },
     });
 
