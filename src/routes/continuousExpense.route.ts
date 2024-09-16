@@ -3,20 +3,23 @@ import continuousExpenseController from "../controllers/continuousExpense.contro
 const router = express.Router();
 
 router.post("/create", continuousExpenseController.createContinuousExpense);
-router.post("/getAll", continuousExpenseController.getAllContinuousExpense);
-router.post(
+router.get("/getAll", continuousExpenseController.getAllContinuousExpense);
+router.get(
   "/getById/:id",
   continuousExpenseController.getContinuousExpenseById
 );
-router.post(
+router.get(
   "/getByUserId/:id",
   continuousExpenseController.getContinuousExpenseByUserId
 );
-router.post(
-  "/getByUserAndCategory/:id/:categoria",
+router.get(
+  "/getByUserAndCategory/:id/:category",
   continuousExpenseController.getContinuousExpenseByUserAndCategory
 );
-router.post("/update", continuousExpenseController.updateContinuousExpense);
-router.post("/delete/:id", continuousExpenseController.deleteContinuousExpense);
+router.put("/update", continuousExpenseController.updateContinuousExpense);
+router.delete(
+  "/delete/:id",
+  continuousExpenseController.deleteContinuousExpense
+);
 
 export default router;

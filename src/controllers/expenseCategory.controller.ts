@@ -47,10 +47,11 @@ const deleteExpenseCategory = async (req: Request, res: Response) => {
   try {
     const del = await prisma.categoriaDespesa.delete({
       where: {
-        id: req.params.id,
+        idUsuario: parseInt(req.params.idUser),
+        id: req.params.category,
       },
     });
-
+    console.log(req.params.idUser + req.params.category);
     res.json(del);
   } catch (e) {
     res.status(500).json({ Error: e });

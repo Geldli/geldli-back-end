@@ -13,101 +13,101 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario{
-  id    Int     @id @default(autoincrement())
-  nome  String 
+model Usuario {
+  id    Int    @id @default(autoincrement())
+  nome  String
   email String @unique
   senha String
   foto  Bytes?
-  
-  despesas Despesa[]
-  despesasContinuas DespesaContinua[]
-  ativos Ativo[]
-  ativosContinuos AtivoContinuo[]
-  categoriasAtivos CategoriaAtivo[]
+
+  despesas           Despesa[]
+  despesasContinuas  DespesaContinua[]
+  ativos             Ativo[]
+  ativosContinuos    AtivoContinuo[]
+  categoriasAtivos   CategoriaAtivo[]
   categoriasDespesas CategoriaDespesa[]
 }
 
-model Despesa{
-  id    Int     @id @default(autoincrement())
-  data  DateTime @db.Date
-  valor Float
-  nome String
+model Despesa {
+  id        Int      @id @default(autoincrement())
+  data      DateTime @db.Date
+  valor     Float
+  nome      String
   descricao String
 
-  categoria CategoriaDespesa @relation(fields: [idCategoria], references: [id])
+  categoria   CategoriaDespesa @relation(fields: [idCategoria], references: [id])
   idCategoria String
 
-  usuario Usuario @relation(fields: [idUsuario], references: [id])
-  idUsuario Int 
-}
-
-model DespesaContinua{
-  id Int @id @default(autoincrement())
-  data  DateTime @db.Date
-  valor Float
-  nome String
-  descricao String
-  mesComeco Int
-  diaPagamento Int
-  anualmente Boolean
-
-  categoria CategoriaDespesa @relation(fields: [idCategoria], references: [id])
-  idCategoria String
-
-  usuario Usuario @relation(fields: [idUsuario], references: [id])
+  usuario   Usuario @relation(fields: [idUsuario], references: [id])
   idUsuario Int
 }
 
-model CategoriaDespesa{
-  id String @id
-  cores String 
-  
-  usuario Usuario @relation(fields: [idUsuario], references: [id])
+model DespesaContinua {
+  id           Int      @id @default(autoincrement())
+  data         DateTime @db.Date
+  valor        Float
+  nome         String
+  descricao    String
+  mesComeco    Int
+  diaPagamento Int
+  anualmente   Boolean
+
+  categoria   CategoriaDespesa @relation(fields: [idCategoria], references: [id])
+  idCategoria String
+
+  usuario   Usuario @relation(fields: [idUsuario], references: [id])
+  idUsuario Int
+}
+
+model CategoriaDespesa {
+  id    String @id
+  cores String
+
+  usuario   Usuario @relation(fields: [idUsuario], references: [id])
   idUsuario Int
 
   despesasContinuas DespesaContinua[]
-  despesas Despesa[]
+  despesas          Despesa[]
 }
 
-model Ativo{
-  id    Int     @id @default(autoincrement())
-  data  DateTime
-  valor Float
-  nome String
+model Ativo {
+  id        Int      @id @default(autoincrement())
+  data      DateTime
+  valor     Float
+  nome      String
   descricao String
 
-  categoria CategoriaAtivo @relation(fields: [idCategoria], references: [id])
+  categoria   CategoriaAtivo @relation(fields: [idCategoria], references: [id])
   idCategoria String
 
-  usuario Usuario @relation(fields: [idUsuario], references: [id])
+  usuario   Usuario @relation(fields: [idUsuario], references: [id])
   idUsuario Int
 }
 
-model AtivoContinuo{
-  id Int @id @default(autoincrement())
-  data  DateTime @db.Date
-  valor Float
-  nome String
-  descricao String
-  mesComeco Int
+model AtivoContinuo {
+  id           Int      @id @default(autoincrement())
+  data         DateTime @db.Date
+  valor        Float
+  nome         String
+  descricao    String
+  mesComeco    Int
   diaPagamento Int
-  anualmente Boolean
+  anualmente   Boolean
 
-  categoria CategoriaAtivo @relation(fields: [idCategoria], references: [id])
-  idCategoria String 
+  categoria   CategoriaAtivo @relation(fields: [idCategoria], references: [id])
+  idCategoria String
 
-  usuario Usuario @relation(fields: [idUsuario], references: [id])
+  usuario   Usuario @relation(fields: [idUsuario], references: [id])
   idUsuario Int
 }
 
-model CategoriaAtivo{
-  id String @id
-  cores String 
-  
-  usuario Usuario @relation(fields: [idUsuario], references: [id])
+model CategoriaAtivo {
+  id    String @id
+  cores String
+
+  usuario   Usuario @relation(fields: [idUsuario], references: [id])
   idUsuario Int
 
   ativosContinuos AtivoContinuo[]
-  ativos Ativo[]
-} 
+  ativos          Ativo[]
+}

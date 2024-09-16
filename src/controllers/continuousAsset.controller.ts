@@ -42,7 +42,7 @@ const getContinousAssetById = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(200).json();
+    res.status(200).json(get);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
@@ -76,7 +76,6 @@ const getContinuousAssetByUserAndCategory = async (
         idCategoria: req.params.category,
       },
     });
-    console.log(req.params.category);
     res.status(200).json(get);
   } catch (e) {
     res.status(500).json({ Error: e });

@@ -8,7 +8,7 @@ router.get("/getAll", AssetController.getAllAssets);
 router.get("/getById/:id", AssetController.getAssetById);
 router.get("/getByUserId/:id", AssetController.getAssetByUserId);
 router.get(
-  "/getByUserAndCategory/:id/:categoria",
+  "/getByUserAndCategory/:idUser/:category",
   AssetController.getAssetByUserCategory
 );
 router.put("/update", AssetController.updateAsset);
