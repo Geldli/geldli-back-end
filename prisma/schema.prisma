@@ -9,13 +9,15 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Usuario {
   id    Int    @id @default(autoincrement())
-  nome  String
+  username String @unique
+  nome  String 
+  sobrenome String
   email String @unique
   senha String
   foto  Bytes?

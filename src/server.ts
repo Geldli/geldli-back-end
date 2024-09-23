@@ -21,7 +21,10 @@ const PORT = process.env.PORT || 3000;
   Saporra não deixa eu usar o back com o front ao mesmo tempo. Pra usar, temos que importar a biblioteca dele
   que está acima, e assim ele deixa eu usar de boa. Mas na hora que upar pro server oficial, temos de tirar ele.
 */
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:8000',
+  credentials: true
+}));
 
 async function main() {
   app.use("/", ClientRouter);

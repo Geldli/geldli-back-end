@@ -1,17 +1,21 @@
 import { prisma } from "../server";
 import express, { Express, Request, Response } from "express";
+import { createHash } from "crypto";
 
 const createUser = async (req: Request, res: Response) => {
   try {
     const data = req.body;
     const post = await prisma.usuario.create({
       data: {
+        username: data.username,
         nome: data.name,
+        sobrenome: data.surname,
         email: data.email,
-        senha: data.password,
+        senha: createHash('sha512').update(data.password).digest('hex'),
       },
     });
-    res.status(200).json(post);
+    res.status(200).json({ registrationSuccessful: true });
+
   } catch (e) {
     res.status(500).json({ Error: e });
   }
@@ -25,6 +29,125 @@ const getAllUsers = async (req: Request, res: Response) => {
     res.status(500).json({ Error: e });
   }
 };
+
+const getUserByUsernameOrEmail = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    const post = await prisma.usuario.findFirst({
+      where: {
+        OR: [
+          {
+            username: data.login
+          },
+          {
+            email: data.login
+          },
+        ],
+      },
+      select: {
+        username: true,
+        email: true,
+      }
+    });
+    res.status(200).json(post);
+  } catch(e) {
+    res.status(500).json({ Error: e });
+  }
+};
+
+const userExists = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    const post = await prisma.usuario.findFirst({
+      where: {
+        OR: [
+          {
+            username: data.login
+          },
+          {
+            email: data.login
+          },
+        ],
+      },
+      select: {
+        username: true,
+        email: true,
+      }
+    });
+    if(post !== null) {
+      res.status(200).json({ userExists: true });
+    } else {
+      res.status(200).json({ userExists: false });
+    }
+  } catch(e) {
+    res.status(500).json({ Error: e });
+  }
+};
+
+const getUserByEmail = async (req: Request, res: Response) => {
+  try {
+    const get = await prisma.usuario.findUnique({
+      where: {
+        email: req.params.username
+      },
+    });
+    res.status(200).json(get);
+  } catch(e) {
+    res.status(500).json({ Error: e });
+  }
+};
+
+const tryLogin = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    const post = await prisma.usuario.findFirst({
+      where: {
+        AND: [
+          {
+            OR: [
+              {
+                username: data.login,
+              },
+              {
+                email: data.login
+              }
+            ],
+          },
+          {
+            senha: createHash('sha512').update(data.password).digest('hex'),
+          }
+        ]
+      }, 
+      select: {
+        id: true,
+        username: true,
+        nome: true,
+        sobrenome: true,
+        email: true,
+        foto: true,
+      }
+    });
+
+    if(post !== null) {
+
+      const options = {
+        secure: false, // TODO change this on deploy to production
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 15,
+        domain: 'localhost',
+      }
+
+      res.cookie('userId', post.id, options);
+      res.status(200).json({ loginSuccessful: true });
+    } else {
+      res.status(200).json({ loginSuccessful: false });
+
+    }
+  } catch(e) {
+    res.status(500).json({ Error: e });
+    
+  }
+}
 
 const updateUser = async (req: Request, res: Response) => {
   try {
@@ -96,6 +219,9 @@ const deleteUser = async (req: Request, res: Response) => {
 export default {
   createUser,
   getAllUsers,
+  getUserByUsernameOrEmail,
+  userExists,
+  tryLogin,
   updateUser,
   deleteUser,
 };

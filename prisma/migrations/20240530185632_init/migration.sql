@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Ativo" ALTER COLUMN "data" SET DATA TYPE TIMESTAMP(3);
