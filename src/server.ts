@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 3000;
   que está acima, e assim ele deixa eu usar de boa. Mas na hora que upar pro server oficial, temos de tirar ele.
 */
 app.use(cors({
-  origin: 'http://localhost:8000',
+  origin: [ 'http://localhost:8000', 'http://localhost:5173'],
   credentials: true
 }));
 

@@ -1,9 +1,8 @@
 
-import express from 'express';
 import path from 'path';
-import { Request, Response } from 'express';
-
+import express, { Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
+
 
 const router = express.Router();
 

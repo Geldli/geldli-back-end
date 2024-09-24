@@ -1,7 +1,10 @@
 import { prisma } from "../server";
 import express, { Express, Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import dotenv from 'dotenv'
 
-// res.status(500).json({ Error: e });
+import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
+
 
 const createAsset = async (req: Request, res: Response) => {
   try {
@@ -48,15 +51,19 @@ const getAssetById = async (req: Request, res: Response) => {
 };
 
 //encontra os ativos do usuario X
-const getAssetByUserId = async (req: Request, res: Response) => {
+const getAssetByUserId = async (req: AuthRequest, res: Response) => {
+
   try {
     const get = await prisma.ativo.findMany({
       where: {
-        idUsuario: parseInt(req.params.id),
+        idUsuario: parseInt(req.user!.userId),
       },
     });
-
-    res.status(200).json(get);
+    
+    if(res.statusCode === 200) {
+      res.status(200).json(get);
+    }
+    
   } catch (e) {
     res.status(500).json({ Error: e });
   }

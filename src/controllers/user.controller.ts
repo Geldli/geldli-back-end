@@ -1,6 +1,11 @@
 import { prisma } from "../server";
 import express, { Express, Request, Response } from "express";
 import { createHash } from "crypto";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
+
+dotenv.config()
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -53,7 +58,27 @@ const getUserByUsernameOrEmail = async (req: Request, res: Response) => {
   } catch(e) {
     res.status(500).json({ Error: e });
   }
-};
+}
+
+const getUserById = async (req: AuthRequest, res: Response) => {
+  try {
+    const get = await prisma.usuario.findUnique({
+      where: {
+        id: parseInt(req.user!.userId),
+      },
+      select: {
+        username: true,
+        nome: true,
+        sobrenome: true,
+        email: true,
+        foto: true,
+      }
+    });
+    res.status(200).json(get)
+  } catch(e) {
+    res.status(500).json({ Error: e })
+  }
+}
 
 const userExists = async (req: Request, res: Response) => {
   try {
@@ -84,20 +109,8 @@ const userExists = async (req: Request, res: Response) => {
   }
 };
 
-const getUserByEmail = async (req: Request, res: Response) => {
-  try {
-    const get = await prisma.usuario.findUnique({
-      where: {
-        email: req.params.username
-      },
-    });
-    res.status(200).json(get);
-  } catch(e) {
-    res.status(500).json({ Error: e });
-  }
-};
-
 const tryLogin = async (req: Request, res: Response) => {
+
   try {
     const data = req.body;
     const post = await prisma.usuario.findFirst({
@@ -137,7 +150,9 @@ const tryLogin = async (req: Request, res: Response) => {
         domain: 'localhost',
       }
 
-      res.cookie('userId', post.id, options);
+      res.cookie('authToken', jwt.sign({ userId: post.id }, process.env.JWT_SECRET as string), options);
+      // res.cookie('userId', post.id, options);
+
       res.status(200).json({ loginSuccessful: true });
     } else {
       res.status(200).json({ loginSuccessful: false });
@@ -148,6 +163,7 @@ const tryLogin = async (req: Request, res: Response) => {
     
   }
 }
+
 
 const updateUser = async (req: Request, res: Response) => {
   try {
@@ -221,6 +237,7 @@ export default {
   getAllUsers,
   getUserByUsernameOrEmail,
   userExists,
+  getUserById,
   tryLogin,
   updateUser,
   deleteUser,
