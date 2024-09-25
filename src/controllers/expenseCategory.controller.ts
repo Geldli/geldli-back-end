@@ -1,16 +1,17 @@
+import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
 import { prisma } from "../server";
 import express, { Express, Request, Response } from "express";
 
-// res.status(500).json({ Error: e });
 
-const createExpenseCategory = async (req: Request, res: Response) => {
+const createExpenseCategory = async (req: AuthRequest, res: Response) => {
+  console.log('a')
   try {
     const data = req.body;
     const post = await prisma.categoriaDespesa.create({
       data: {
-        id: data.name.toLowerCase(),
-        cores: data.color.toLowerCase(),
-        idUsuario: data.idUser,
+        id: data.name,
+        cores: data.color,
+        idUsuario: parseInt(req.user!.userId),
       },
     });
 
@@ -29,11 +30,11 @@ const getAllExpenseCategory = async (req: Request, res: Response) => {
   }
 };
 
-const getExpenseCategoryByUser = async (req: Request, res: Response) => {
+const getExpenseCategoryByUser = async (req: AuthRequest, res: Response) => {
   try {
     const get = await prisma.categoriaDespesa.findMany({
       where: {
-        idUsuario: parseInt(req.params.id),
+        idUsuario: parseInt(req.user!.userId),
       },
     });
 

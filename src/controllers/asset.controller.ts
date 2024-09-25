@@ -6,17 +6,17 @@ import dotenv from 'dotenv'
 import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
 
 
-const createAsset = async (req: Request, res: Response) => {
+const createAsset = async (req: AuthRequest, res: Response) => {
   try {
-    const data = req.body;
+    const data = req.body;    
     const post = await prisma.ativo.create({
       data: {
         data: new Date(),
-        valor: data.valor,
+        valor: parseFloat(data.valor),
         nome: data.name,
         descricao: data.description,
         idCategoria: data.idCategory,
-        idUsuario: data.idUser,
+        idUsuario: parseInt(req.user!.userId),
       },
     });
 
@@ -84,6 +84,24 @@ const getAssetByUserCategory = async (req: Request, res: Response) => {
   }
 };
 
+
+const getAssetsSumByUserId = async(req: AuthRequest, res: Response) => {
+  try {
+    const get = await prisma.ativo.aggregate({
+      where: {
+        idUsuario: parseInt(req.user!.userId),
+      },
+      _sum: {
+        valor: true,
+      },
+    });
+    res.json(get._sum);
+  } catch(e) {
+    res.status(500).json({ Error: e })
+  }
+}
+
+
 const updateAsset = async (req: Request, res: Response) => {
   try {
     const data = req.body;
@@ -124,6 +142,7 @@ export default {
   getAssetByUserCategory,
   getAssetByUserId,
   getAllAssets,
+  getAssetsSumByUserId,
   updateAsset,
   deleteAsset,
 };

@@ -1,24 +1,24 @@
+import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
 import { prisma } from "../server";
 import express, { Express, Request, Response } from "express";
 
 // res.status(500).json({ Error: e });
 
-const createAssetCategory = async (req: Request, res: Response) => {
+const createAssetCategory = async (req: AuthRequest, res: Response) => {
   try {
     const data = req.body;
     const post = await prisma.categoriaAtivo.create({
       data: {
-        id: data.name.toLowerCase(),
-        cores: data.color.toLowerCase(),
-        idUsuario: parseInt(data.idUser),
+        id: data.name,
+        cores: data.color,
+        idUsuario: parseInt(req.user!.userId),
       },
     });
-
+    
     res.status(200).json(post);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
-  const data = req.body;
 };
 
 const getAllAssetCategory = async (req: Request, res: Response) => {

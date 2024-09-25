@@ -1,19 +1,20 @@
+import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
 import { prisma } from "../server";
 import express, { Express, Request, Response } from "express";
 
 // res.status(500).json({ Error: e });
 
-const createExpense = async (req: Request, res: Response) => {
+const createExpense = async (req: AuthRequest, res: Response) => {
   try {
     const data = req.body;
     const post = await prisma.despesa.create({
       data: {
         data: new Date(),
-        valor: data.valor,
+        valor: parseFloat(data.valor),
         nome: data.name,
         descricao: data.description,
         idCategoria: data.idCategory,
-        idUsuario: data.idUser,
+        idUsuario: parseInt(req.user!.userId),
       },
     });
     res.status(200).json(post);
@@ -44,11 +45,11 @@ const getExpenseByID = async (req: Request, res: Response) => {
   }
 };
 
-const getExpensesByUserID = async (req: Request, res: Response) => {
+const getExpensesByUserID = async (req: AuthRequest, res: Response) => {
   try {
     const get = await prisma.despesa.findMany({
       where: {
-        idUsuario: parseInt(req.params.id),
+        idUsuario: parseInt(req.user!.userId),
       },
     });
     res.status(200).json(get);
@@ -71,6 +72,24 @@ const getExpensesByUserCategory = async (req: Request, res: Response) => {
     res.status(500).json({ Error: e });
   }
 };
+
+
+const getexpenseSumByUserId = async(req: AuthRequest, res: Response) => {
+  try {
+    const get = await prisma.despesa.aggregate({
+      where: {
+        idUsuario: parseInt(req.user!.userId),
+      },
+      _sum: {
+        valor: true,
+      },
+    });
+    res.json(get._sum);
+  } catch(e) {
+    res.status(500).json({ Error: e })
+  }
+}
+
 
 const updateExpense = async (req: Request, res: Response) => {
   try {
@@ -111,6 +130,7 @@ export default {
   getExpenseByID,
   getExpensesByUserID,
   getExpensesByUserCategory,
+  getexpenseSumByUserId,
   updateExpense,
   deleteExpense,
 };
