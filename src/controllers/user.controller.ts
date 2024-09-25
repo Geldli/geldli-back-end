@@ -148,11 +148,10 @@ const tryLogin = async (req: Request, res: Response) => {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 15,
         domain: 'localhost',
+
       }
 
       res.cookie('authToken', jwt.sign({ userId: post.id }, process.env.JWT_SECRET as string), options);
-      // res.cookie('userId', post.id, options);
-
       res.status(200).json({ loginSuccessful: true });
     } else {
       res.status(200).json({ loginSuccessful: false });
