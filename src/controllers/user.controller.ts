@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
 
-dotenv.config()
+dotenv.config();
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -16,11 +16,10 @@ const createUser = async (req: Request, res: Response) => {
         nome: data.name,
         sobrenome: data.surname,
         email: data.email,
-        senha: createHash('sha512').update(data.password).digest('hex'),
+        senha: createHash("sha512").update(data.password).digest("hex"),
       },
     });
     res.status(200).json({ registrationSuccessful: true });
-
   } catch (e) {
     res.status(500).json({ Error: e });
   }
@@ -42,23 +41,23 @@ const getUserByUsernameOrEmail = async (req: Request, res: Response) => {
       where: {
         OR: [
           {
-            username: data.login
+            username: data.login,
           },
           {
-            email: data.login
+            email: data.login,
           },
         ],
       },
       select: {
         username: true,
         email: true,
-      }
+      },
     });
     res.status(200).json(post);
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ Error: e });
   }
-}
+};
 
 const getUserById = async (req: AuthRequest, res: Response) => {
   try {
@@ -72,13 +71,13 @@ const getUserById = async (req: AuthRequest, res: Response) => {
         sobrenome: true,
         email: true,
         foto: true,
-      }
+      },
     });
-    res.status(200).json(get)
-  } catch(e) {
-    res.status(500).json({ Error: e })
+    res.status(200).json(get);
+  } catch (e) {
+    res.status(500).json({ Error: e });
   }
-}
+};
 
 const userExists = async (req: Request, res: Response) => {
   try {
@@ -87,30 +86,29 @@ const userExists = async (req: Request, res: Response) => {
       where: {
         OR: [
           {
-            username: data.login
+            username: data.login,
           },
           {
-            email: data.login
+            email: data.login,
           },
         ],
       },
       select: {
         username: true,
         email: true,
-      }
+      },
     });
-    if(post !== null) {
+    if (post !== null) {
       res.status(200).json({ userExists: true });
     } else {
       res.status(200).json({ userExists: false });
     }
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ Error: e });
   }
 };
 
 const tryLogin = async (req: Request, res: Response) => {
-
   try {
     const data = req.body;
     const post = await prisma.usuario.findFirst({
@@ -122,15 +120,15 @@ const tryLogin = async (req: Request, res: Response) => {
                 username: data.login,
               },
               {
-                email: data.login
-              }
+                email: data.login,
+              },
             ],
           },
           {
-            senha: createHash('sha512').update(data.password).digest('hex'),
-          }
-        ]
-      }, 
+            senha: createHash("sha512").update(data.password).digest("hex"),
+          },
+        ],
+      },
       select: {
         id: true,
         username: true,
@@ -138,32 +136,33 @@ const tryLogin = async (req: Request, res: Response) => {
         sobrenome: true,
         email: true,
         foto: true,
-      }
+      },
     });
 
-    if(post !== null) {
-
+    if (post !== null) {
       const options = {
         secure: false, // TODO change this on deploy to production
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 15,
-        domain: 'localhost',
-      }
+        domain: "localhost",
+      };
 
-      res.cookie('authToken', jwt.sign({ userId: post.id }, process.env.JWT_SECRET as string), options);
-      // res.cookie('userId', post.id, options);
+      res.cookie(
+        "authToken",
+        jwt.sign({ userId: post.id }, process.env.JWT_SECRET as string),
+        options
+      );
+
+      //res.cookie("userId", post.id, options);
 
       res.status(200).json({ loginSuccessful: true });
     } else {
       res.status(200).json({ loginSuccessful: false });
-
     }
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ Error: e });
-    
   }
-}
-
+};
 
 const updateUser = async (req: Request, res: Response) => {
   try {
