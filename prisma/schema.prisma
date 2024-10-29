@@ -16,7 +16,7 @@ datasource db {
 model Usuario {
   id    Int    @id @default(autoincrement())
   username String @unique
-  nome  String 
+  nome  String
   sobrenome String
   email String @unique
   senha String
@@ -32,7 +32,7 @@ model Usuario {
 
 model Despesa {
   id        Int      @id @default(autoincrement())
-  data      DateTime @db.Date
+  data      DateTime 
   valor     Float
   nome      String
   descricao String
@@ -88,7 +88,7 @@ model Ativo {
 
 model AtivoContinuo {
   id           Int      @id @default(autoincrement())
-  data         DateTime @db.Date
+  data         DateTime 
   valor        Float
   nome         String
   descricao    String

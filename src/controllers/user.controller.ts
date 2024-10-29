@@ -61,7 +61,7 @@ const getUserByUsernameOrEmail = async (req: Request, res: Response) => {
 
 const getUserById = async (req: AuthRequest, res: Response) => {
   try {
-    const get = await prisma.usuario.findUnique({
+    const post = await prisma.usuario.findUnique({
       where: {
         id: parseInt(req.user!.userId),
       },
@@ -73,7 +73,7 @@ const getUserById = async (req: AuthRequest, res: Response) => {
         foto: true,
       },
     });
-    res.status(200).json(get);
+    res.status(200).json(post);
   } catch (e) {
     res.status(500).json({ Error: e });
   }

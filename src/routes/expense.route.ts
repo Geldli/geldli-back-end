@@ -9,7 +9,7 @@ router.use(cookieParser());
 router.post("/create", authenticateToken, ExpenseController.createExpense);
 router.get("/getAll", ExpenseController.getAllExpenses);
 router.get("/getById/:id", ExpenseController.getExpenseByID);
-router.get("/getByUserId/", authenticateToken, ExpenseController.getExpensesByUserID);
+router.post("/getByUserId/", authenticateToken, ExpenseController.getExpensesByUserID);
 router.get(
   "/getByUserAndCategory/:idUser/:category",
   ExpenseController.getExpensesByUserCategory

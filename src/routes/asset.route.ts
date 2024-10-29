@@ -12,7 +12,7 @@ router.use(cookieParser());
 router.post("/create", authenticateToken, AssetController.createAsset);
 router.get("/getAll", AssetController.getAllAssets);
 router.get("/getById/:id", AssetController.getAssetById);
-router.get("/getByUserId", authenticateToken, AssetController.getAssetByUserId);
+router.post("/getByUserId", authenticateToken, AssetController.getAssetByUserId);
 router.get(
   "/getByUserAndCategory/:idUser/:category",
   AssetController.getAssetByUserCategory

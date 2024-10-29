@@ -54,14 +54,22 @@ const getAssetById = async (req: Request, res: Response) => {
 const getAssetByUserId = async (req: AuthRequest, res: Response) => {
 
   try {
-    const get = await prisma.ativo.findMany({
+    const post = await prisma.ativo.findMany({
       where: {
         idUsuario: parseInt(req.user!.userId),
-      },
+      }, 
+      select: {
+        id: true,
+        data: true,
+        valor: true,
+        nome: true,
+        descricao: true,
+        idCategoria: true,
+      }
     });
     
     if(res.statusCode === 200) {
-      res.status(200).json(get);
+      res.status(200).json(post);
     }
     
   } catch (e) {

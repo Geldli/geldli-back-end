@@ -2,18 +2,17 @@ import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
 import { prisma } from "../server";
 import express, { Express, Request, Response } from "express";
 
-// res.status(500).json({ Error: e });
 
 const createExpense = async (req: AuthRequest, res: Response) => {
   try {
     const data = req.body;
     const post = await prisma.despesa.create({
       data: {
-        data: new Date(),
+        data: new Date(data.data),
         valor: parseFloat(data.valor),
-        nome: data.name,
-        descricao: data.description,
-        idCategoria: data.idCategory,
+        nome: data.nome,
+        descricao: data.descricao,
+        idCategoria: data.idCategoria,
         idUsuario: parseInt(req.user!.userId),
       },
     });
@@ -47,12 +46,20 @@ const getExpenseByID = async (req: Request, res: Response) => {
 
 const getExpensesByUserID = async (req: AuthRequest, res: Response) => {
   try {
-    const get = await prisma.despesa.findMany({
+    const post = await prisma.despesa.findMany({
       where: {
         idUsuario: parseInt(req.user!.userId),
       },
+      select: {
+        id: true,
+        data: true,
+        valor: true,
+        nome: true,
+        descricao: true,
+        idCategoria: true,
+      }
     });
-    res.status(200).json(get);
+    res.status(200).json(post);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
