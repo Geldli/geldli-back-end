@@ -9,9 +9,6 @@ router.use(cookieParser());
 router.post("/create", authenticateToken, ExpenseCategoryController.createExpenseCategory);
 router.get("/getAll", ExpenseCategoryController.getAllExpenseCategory);
 router.post("/getByUserId", authenticateToken, ExpenseCategoryController.getExpenseCategoryByUser);
-router.delete(
-  "/delete/:idUser/:category",
-  ExpenseCategoryController.deleteExpenseCategory
-);
+router.delete("/delete", authenticateToken, ExpenseCategoryController.deleteExpenseCategory);
 
 export default router;

@@ -9,13 +9,10 @@ router.use(cookieParser());
 router.post("/create", authenticateToken, ExpenseController.createExpense);
 router.get("/getAll", ExpenseController.getAllExpenses);
 router.get("/getById/:id", ExpenseController.getExpenseByID);
-router.post("/getByUserId/", authenticateToken, ExpenseController.getExpensesByUserID);
-router.get(
-  "/getByUserAndCategory/:idUser/:category",
-  ExpenseController.getExpensesByUserCategory
-);
+router.post("/getByUserId", authenticateToken, ExpenseController.getExpensesByUserID);
+router.post("/getByUserIdAndCategory", authenticateToken, ExpenseController.getExpensesByUserIdAndCategory);
 router.get('/expensesSum', authenticateToken, ExpenseController.getexpenseSumByUserId);
-router.put("/update", ExpenseController.updateExpense);
-router.delete("/delete/:id", ExpenseController.deleteExpense);
+router.put("/update", authenticateToken, ExpenseController.updateExpense);
+router.delete("/delete", authenticateToken, ExpenseController.deleteExpense);
 
 export default router;

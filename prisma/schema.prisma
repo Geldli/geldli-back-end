@@ -32,12 +32,12 @@ model Usuario {
 
 model Despesa {
   id        Int      @id @default(autoincrement())
-  data      DateTime 
+  data      DateTime @db.Date
   valor     Float
   nome      String
   descricao String
 
-  categoria   CategoriaDespesa @relation(fields: [idCategoria], references: [id])
+  categoria   CategoriaDespesa @relation(fields: [idCategoria, idUsuario], references: [id, idUsuario])
   idCategoria String
 
   usuario   Usuario @relation(fields: [idUsuario], references: [id])
@@ -46,7 +46,7 @@ model Despesa {
 
 model DespesaContinua {
   id           Int      @id @default(autoincrement())
-  data         DateTime @db.Date
+  data         DateTime
   valor        Float
   nome         String
   descricao    String
@@ -54,7 +54,7 @@ model DespesaContinua {
   diaPagamento Int
   anualmente   Boolean
 
-  categoria   CategoriaDespesa @relation(fields: [idCategoria], references: [id])
+  categoria   CategoriaDespesa @relation(fields: [idCategoria, idUsuario], references: [id, idUsuario])
   idCategoria String
 
   usuario   Usuario @relation(fields: [idUsuario], references: [id])
@@ -62,7 +62,7 @@ model DespesaContinua {
 }
 
 model CategoriaDespesa {
-  id    String @id
+  id    String
   cores String
 
   usuario   Usuario @relation(fields: [idUsuario], references: [id])
@@ -70,6 +70,8 @@ model CategoriaDespesa {
 
   despesasContinuas DespesaContinua[]
   despesas          Despesa[]
+
+  @@id([id, idUsuario])
 }
 
 model Ativo {
@@ -79,7 +81,7 @@ model Ativo {
   nome      String
   descricao String
 
-  categoria   CategoriaAtivo @relation(fields: [idCategoria], references: [id])
+  categoria   CategoriaAtivo @relation(fields: [idCategoria, idUsuario], references: [id, idUsuario])
   idCategoria String
 
   usuario   Usuario @relation(fields: [idUsuario], references: [id])
@@ -96,7 +98,7 @@ model AtivoContinuo {
   diaPagamento Int
   anualmente   Boolean
 
-  categoria   CategoriaAtivo @relation(fields: [idCategoria], references: [id])
+  categoria   CategoriaAtivo @relation(fields: [idCategoria, idUsuario], references: [id, idUsuario])
   idCategoria String
 
   usuario   Usuario @relation(fields: [idUsuario], references: [id])
@@ -104,11 +106,13 @@ model AtivoContinuo {
 }
 
 model CategoriaAtivo {
-  id    String @id
+  id    String
   cores String
 
   usuario   Usuario @relation(fields: [idUsuario], references: [id])
   idUsuario Int
+
+  @@id([id, idUsuario])
 
   ativosContinuos AtivoContinuo[]
   ativos          Ativo[]

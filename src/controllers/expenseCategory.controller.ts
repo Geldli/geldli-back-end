@@ -4,13 +4,12 @@ import express, { Express, Request, Response } from "express";
 
 
 const createExpenseCategory = async (req: AuthRequest, res: Response) => {
-  console.log('a')
   try {
     const data = req.body;
     const post = await prisma.categoriaDespesa.create({
       data: {
-        id: data.name,
-        cores: data.color,
+        id: data.id,
+        cores: data.cores,
         idUsuario: parseInt(req.user!.userId),
       },
     });
@@ -44,15 +43,17 @@ const getExpenseCategoryByUser = async (req: AuthRequest, res: Response) => {
   }
 };
 
-const deleteExpenseCategory = async (req: Request, res: Response) => {
+const deleteExpenseCategory = async (req: AuthRequest, res: Response) => {
   try {
+    const data = req.body;
     const del = await prisma.categoriaDespesa.delete({
       where: {
-        idUsuario: parseInt(req.params.idUser),
-        id: req.params.category,
+        id_idUsuario: {
+          id: data.id,
+          idUsuario: parseInt(req.user!.userId),
+        }
       },
     });
-    console.log(req.params.idUser + req.params.category);
     res.json(del);
   } catch (e) {
     res.status(500).json({ Error: e });

@@ -1,3 +1,4 @@
+import { connect } from "http2";
 import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
 import { prisma } from "../server";
 import express, { Express, Request, Response } from "express";
@@ -6,14 +7,15 @@ import express, { Express, Request, Response } from "express";
 const createExpense = async (req: AuthRequest, res: Response) => {
   try {
     const data = req.body;
+
     const post = await prisma.despesa.create({
       data: {
         data: new Date(data.data),
         valor: parseFloat(data.valor),
         nome: data.nome,
         descricao: data.descricao,
-        idCategoria: data.idCategoria,
         idUsuario: parseInt(req.user!.userId),
+        idCategoria: data.idCategoria,
       },
     });
     res.status(200).json(post);
@@ -66,15 +68,16 @@ const getExpensesByUserID = async (req: AuthRequest, res: Response) => {
 };
 
 // encontra todas as despesas do usuario X e com categoria Y
-const getExpensesByUserCategory = async (req: Request, res: Response) => {
+const getExpensesByUserIdAndCategory = async (req: AuthRequest, res: Response) => {
   try {
-    const get = await prisma.despesa.findMany({
+    const data = req.body;
+    const post = await prisma.despesa.findMany({
       where: {
-        idUsuario: parseInt(req.params.idUser),
-        idCategoria: req.params.category,
+        idUsuario: parseInt(req.user!.userId),
+        idCategoria: data.idCategoria,
       },
     });
-    res.status(200).json(get);
+    res.status(200).json(post);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
@@ -98,18 +101,22 @@ const getexpenseSumByUserId = async(req: AuthRequest, res: Response) => {
 }
 
 
-const updateExpense = async (req: Request, res: Response) => {
+const updateExpense = async (req: AuthRequest, res: Response) => {
   try {
     const data = req.body;
+
     const put = await prisma.despesa.update({
       where: {
         id: data.id,
+        idUsuario: req.user!.userId
       },
+        
       data: {
-        valor: data.valor,
-        nome: data.name,
-        descricao: data.description,
-        idCategoria: data.idCategory,
+        data: new Date(data.data),
+        valor: parseFloat(data.valor),
+        nome: data.nome,
+        descricao: data.descricao,
+        idCategoria: data.idCategoria,
       },
     });
     res.status(200).json(put);
@@ -118,11 +125,13 @@ const updateExpense = async (req: Request, res: Response) => {
   }
 };
 
-const deleteExpense = async (req: Request, res: Response) => {
+const deleteExpense = async (req: AuthRequest, res: Response) => {
   try {
+    const data = req.body;
     const del = await prisma.despesa.delete({
       where: {
-        id: parseInt(req.params.id),
+        id: data.id,
+        idUsuario: parseInt(req.user!.userId),
       },
     });
     res.status(200).json(del);
@@ -136,7 +145,7 @@ export default {
   getAllExpenses,
   getExpenseByID,
   getExpensesByUserID,
-  getExpensesByUserCategory,
+  getExpensesByUserIdAndCategory,
   getexpenseSumByUserId,
   updateExpense,
   deleteExpense,
