@@ -44,23 +44,6 @@ model Despesa {
   idUsuario Int
 }
 
-model DespesaContinua {
-  id           Int      @id @default(autoincrement())
-  data         DateTime
-  valor        Float
-  nome         String
-  descricao    String
-  mesComeco    Int
-  diaPagamento Int
-  anualmente   Boolean
-
-  categoria   CategoriaDespesa @relation(fields: [idCategoria, idUsuario], references: [id, idUsuario])
-  idCategoria String
-
-  usuario   Usuario @relation(fields: [idUsuario], references: [id])
-  idUsuario Int
-}
-
 model CategoriaDespesa {
   id    String
   cores String
@@ -88,6 +71,36 @@ model Ativo {
   idUsuario Int
 }
 
+model CategoriaAtivo {
+  id    String
+  cores String
+
+  usuario   Usuario @relation(fields: [idUsuario], references: [id])
+  idUsuario Int
+
+  @@id([id, idUsuario])
+
+  ativosContinuos AtivoContinuo[]
+  ativos          Ativo[]
+}
+
+model DespesaContinua {
+  id           Int      @id @default(autoincrement())
+  data         DateTime
+  valor        Float
+  nome         String
+  descricao    String
+  mesComeco    Int
+  diaPagamento Int
+  anualmente   Boolean
+
+  categoria   CategoriaDespesa @relation(fields: [idCategoria, idUsuario], references: [id, idUsuario])
+  idCategoria String
+
+  usuario   Usuario @relation(fields: [idUsuario], references: [id])
+  idUsuario Int
+}
+
 model AtivoContinuo {
   id           Int      @id @default(autoincrement())
   data         DateTime 
@@ -103,17 +116,4 @@ model AtivoContinuo {
 
   usuario   Usuario @relation(fields: [idUsuario], references: [id])
   idUsuario Int
-}
-
-model CategoriaAtivo {
-  id    String
-  cores String
-
-  usuario   Usuario @relation(fields: [idUsuario], references: [id])
-  idUsuario Int
-
-  @@id([id, idUsuario])
-
-  ativosContinuos AtivoContinuo[]
-  ativos          Ativo[]
 }

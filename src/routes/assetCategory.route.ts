@@ -8,10 +8,7 @@ router.use(cookieParser());
 
 router.post("/create", authenticateToken, AssetCategoryController.createAssetCategory);
 router.get("/getAll", AssetCategoryController.getAllAssetCategory);
-router.get("/getByUserId/:id", AssetCategoryController.getAssetCategoryByUser);
-router.delete(
-  "/delete/:idUser/:category",
-  AssetCategoryController.deleteAssetCategory
-);
+router.post("/getByUserId", authenticateToken, AssetCategoryController.getAssetCategoryByUser);
+router.delete("/delete", authenticateToken, AssetCategoryController.deleteAssetCategory);
 
 export default router;

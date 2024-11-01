@@ -13,12 +13,9 @@ router.post("/create", authenticateToken, AssetController.createAsset);
 router.get("/getAll", AssetController.getAllAssets);
 router.get("/getById/:id", AssetController.getAssetById);
 router.post("/getByUserId", authenticateToken, AssetController.getAssetByUserId);
-router.get(
-  "/getByUserAndCategory/:idUser/:category",
-  AssetController.getAssetByUserCategory
-);
+router.post("/getByUserIdAndCategory", authenticateToken, AssetController.getAssetsByUserIdAndCategory);
 router.get('/assetsSum', authenticateToken, AssetController.getAssetsSumByUserId);
-router.put("/update", AssetController.updateAsset);
-router.delete("/delete/:id", AssetController.deleteAsset);
+router.put("/update", authenticateToken, AssetController.updateAsset);
+router.delete("/delete/", authenticateToken, AssetController.deleteAsset);
 
 export default router;

@@ -1,13 +1,11 @@
-import { connect } from "http2";
 import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
 import { prisma } from "../server";
-import express, { Express, Request, Response } from "express";
+import { Request, Response } from "express";
 
 
 const createExpense = async (req: AuthRequest, res: Response) => {
   try {
     const data = req.body;
-
     const post = await prisma.despesa.create({
       data: {
         data: new Date(data.data),

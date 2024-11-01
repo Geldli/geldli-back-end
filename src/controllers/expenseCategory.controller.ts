@@ -1,6 +1,6 @@
 import { AuthRequest } from "../interfaces/authenticateToken.interfaces";
 import { prisma } from "../server";
-import express, { Express, Request, Response } from "express";
+import { Request, Response } from "express";
 
 
 const createExpenseCategory = async (req: AuthRequest, res: Response) => {
@@ -35,6 +35,10 @@ const getExpenseCategoryByUser = async (req: AuthRequest, res: Response) => {
       where: {
         idUsuario: parseInt(req.user!.userId),
       },
+      select: {
+        id: true,
+        cores: true
+      }
     });
 
     res.status(200).json(post);
@@ -54,7 +58,8 @@ const deleteExpenseCategory = async (req: AuthRequest, res: Response) => {
         }
       },
     });
-    res.json(del);
+
+    res.status(200).json(del);
   } catch (e) {
     res.status(500).json({ Error: e });
   }

@@ -11,12 +11,12 @@ const createAsset = async (req: AuthRequest, res: Response) => {
     const data = req.body;    
     const post = await prisma.ativo.create({
       data: {
-        data: new Date(),
+        data: new Date(data.data),
         valor: parseFloat(data.valor),
-        nome: data.name,
-        descricao: data.description,
-        idCategoria: data.idCategory,
+        nome: data.nome,
+        descricao: data.descricao,
         idUsuario: parseInt(req.user!.userId),
+        idCategoria: data.idCategoria,
       },
     });
 
@@ -67,26 +67,23 @@ const getAssetByUserId = async (req: AuthRequest, res: Response) => {
         idCategoria: true,
       }
     });
-    
-    if(res.statusCode === 200) {
-      res.status(200).json(post);
-    }
-    
+    res.status(200).json(post);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
 };
 
 // encontra os ativos do usuario X com categoria Y
-const getAssetByUserCategory = async (req: Request, res: Response) => {
+const getAssetsByUserIdAndCategory = async (req: AuthRequest, res: Response) => {
   try {
-    const get = await prisma.ativo.findMany({
+    const data = req.body;
+    const post = await prisma.ativo.findMany({
       where: {
-        idUsuario: parseInt(req.params.idUser),
-        idCategoria: req.params.category,
+        idUsuario: parseInt(req.user!.userId),
+        idCategoria: data.idCategoria,
       },
     });
-    res.json(get);
+    res.status(200).json(post);
   } catch (e) {
     res.status(500).json({ Error: e });
   }
@@ -110,18 +107,20 @@ const getAssetsSumByUserId = async(req: AuthRequest, res: Response) => {
 }
 
 
-const updateAsset = async (req: Request, res: Response) => {
+const updateAsset = async (req: AuthRequest, res: Response) => {
   try {
     const data = req.body;
     const put = await prisma.ativo.update({
       where: {
         id: data.id,
+        idUsuario: req.user!.userId
       },
       data: {
-        valor: data.valor,
-        nome: data.name,
-        descricao: data.description,
-        idCategoria: data.idCategory,
+        data: new Date(data.data),
+        valor: parseFloat(data.valor),
+        nome: data.nome,
+        descricao: data.descricao,
+        idCategoria: data.idCategoria,
       },
     });
     res.status(200).json(put);
@@ -130,11 +129,13 @@ const updateAsset = async (req: Request, res: Response) => {
   }
 };
 
-const deleteAsset = async (req: Request, res: Response) => {
+const deleteAsset = async (req: AuthRequest, res: Response) => {
   try {
+    const data = req.body;
     const del = await prisma.ativo.delete({
       where: {
-        id: parseInt(req.params.id),
+        id: data.id,
+        idUsuario: parseInt(req.user!.userId),
       },
     });
 
@@ -147,7 +148,7 @@ const deleteAsset = async (req: Request, res: Response) => {
 export default {
   createAsset,
   getAssetById,
-  getAssetByUserCategory,
+  getAssetsByUserIdAndCategory,
   getAssetByUserId,
   getAllAssets,
   getAssetsSumByUserId,
