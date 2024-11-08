@@ -29,7 +29,15 @@ app.use(cors({
 async function main() {
   app.use("/", ClientRouter);
   app.use(express.json());
-
+  app.use(express.json({ limit: '100mb' }));
+  app.use(express.urlencoded({ limit: '100mb', extended: true }));
+  app.use((req, res, next) => {
+    res.setTimeout(50000, () => { // Timeout de 50 segundos
+      console.log('Request timed out');
+      res.send(408); // Código de timeout
+    });
+    next();
+  });
   app.use("/api/v1/user", UserRouter);
   app.use("/api/v1/expense", ExpenseRouter);
   app.use("/api/v1/asset", ActiveRouter);

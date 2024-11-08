@@ -34,6 +34,34 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+const getUserFoto = async (req: Request, res: Response) => {
+  try {
+    const get = await prisma.usuario.findFirst({
+      where: {
+        id: parseInt(req.params.id),
+      },
+      select: {
+        foto: true,
+      },
+    });
+        //@ts-ignore
+        const buffer = Buffer.from(get.foto, 'base64'); // Ou de outra fonte
+
+        // Converter o Buffer para Base64
+        const base64Image = buffer.toString('base64');
+      
+        // Criar uma URL de dados (data URL) para a imagem
+        const imageSrc = `data:image/jpeg;base64,${base64Image}`;
+    
+        //@ts-ignore
+        get.foto = imageSrc;
+
+    res.status(200).json(get);
+  } catch (e) {
+    res.status(500).json({ Error: e });
+  }
+};
+
 const getUserByUsernameOrEmail = async (req: Request, res: Response) => {
   try {
     const data = req.body;
@@ -66,11 +94,11 @@ const getUserById = async (req: AuthRequest, res: Response) => {
         id: parseInt(req.user!.userId),
       },
       select: {
+        id: true,
         username: true,
         nome: true,
         sobrenome: true,
         email: true,
-        foto: true,
       },
     });
     res.status(200).json(post);
@@ -107,6 +135,46 @@ const userExists = async (req: Request, res: Response) => {
     res.status(500).json({ Error: e });
   }
 };
+
+
+const emailUsernameExist = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    const post = await prisma.usuario.findFirst({
+      where: {
+        OR: [
+          {
+            username: data.username,
+          },
+          {
+            email: data.email,
+          },
+        ],
+      },
+      select: {
+        username: true,
+        email: true,
+      },
+    });
+    if (post !== null) {
+      res.status(200).json({ userExists: true });
+    } else {
+      res.status(200).json({ userExists: false });
+    }
+  } catch (e) {
+    res.status(500).json({ Error: e });
+  }
+};
+
+const logout = async (req: AuthRequest, res: Response) => {
+  try {
+    res.clearCookie('authToken');
+    res.status(200);
+    res.end();
+  } catch (e) {
+    res.status(500).json({ Error: e });
+  }  
+}
 
 const tryLogin = async (req: Request, res: Response) => {
   try {
@@ -166,7 +234,8 @@ const updateUser = async (req: Request, res: Response) => {
         id: parseInt(req.params.id),
       },
       data: {
-        senha: data.password,
+        email: data.email,
+        username: data.username,
       },
     });
     res.status(200).json(put);
@@ -174,6 +243,27 @@ const updateUser = async (req: Request, res: Response) => {
     res.status(500).json({ Error: e });
   }
 };
+
+
+const updateUserFoto = async (req: Request, res: Response) => {
+  try {
+
+    const { image } = req.body;
+
+    const put = await prisma.usuario.update({
+      where: {
+        id: parseInt(req.params.id),
+      },
+      data: {
+        foto: image,
+      },
+    });
+    res.status(200).json(put);
+  } catch (e) {
+    res.status(500).json({ Error: e });
+  }
+};
+
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
@@ -228,10 +318,14 @@ const deleteUser = async (req: Request, res: Response) => {
 export default {
   createUser,
   getAllUsers,
+  getUserFoto,
   getUserByUsernameOrEmail,
   userExists,
   getUserById,
+  emailUsernameExist,
   tryLogin,
+  logout,
   updateUser,
+  updateUserFoto,
   deleteUser,
 };
